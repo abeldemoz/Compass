@@ -9,6 +9,8 @@ public protocol Coordinator: AnyObject {
 
     var childCoordinators: [Coordinator] { get set }
     var navigator: Navigator { get }
+    var rootViewController: ViewController? { get set }
+    var parentCoordinator: Coordinator? { get set }
 
     func dismiss(animated: Bool)
     func start(transition: Transition, onDismissed: (() -> Void)?)
@@ -37,6 +39,7 @@ public extension Coordinator {
             self.removeChild(child)
             onDismissed?()
         })
+        child.parentCoordinator = self
     }
 
     private func removeChild(_ child: Coordinator) {

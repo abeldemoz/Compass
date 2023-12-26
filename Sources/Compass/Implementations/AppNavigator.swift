@@ -7,24 +7,40 @@
 
 import UIKit
 
-final class AppNavigator: Navigator {
+public final class AppNavigator: Navigator {
 
     private let window: Window
 
-    init(window: Window) {
+    public init(window: Window) {
         self.window = window
     }
 
-    func present(_ viewController: inout ViewController, transition: Transition, onDismissed: (() -> Void)?) {
+    public func navigate(to viewController: inout ViewController, transition: Transition, onDismissed: (() -> Void)?) {
         window.rootViewController = viewController
         window.makeKeyAndVisible()
     }
 
-    func dismiss(animated: Bool) {
+    public func exitFlow(coordinator: Coordinator, animated: Bool) {
+        fatalError("AppNavigator should never exit flow")
+    }
+
+    public func dismiss(animated: Bool) {
         fatalError("AppNavigator should never dismiss")
     }
 
-    func dismissViewController(animated: Bool) {
+    public func dismissViewController(animated: Bool) {
         fatalError("AppNavigator should never dismiss")
+    }
+
+    public func popViewController(animated: Bool) {
+        fatalError("AppNavigator should never pop")
+    }
+
+    public func popToViewController(_ viewController: ViewController, animated: Bool) {
+        fatalError("AppNavigator should never pop")
+    }
+
+    public func popToRootViewController(animated: Bool) {
+        fatalError("AppNavigator should never pop")
     }
 }

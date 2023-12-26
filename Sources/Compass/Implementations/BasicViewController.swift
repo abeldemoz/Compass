@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class BasicViewController: UIViewController, ViewController {
+public final class BasicViewController: UIViewController, ViewController {
 
     public var onDismissed: (() -> Void)? = nil
 

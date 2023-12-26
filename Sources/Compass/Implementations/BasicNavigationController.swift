@@ -11,12 +11,8 @@ public final class BasicNavigationController: UINavigationController {
 
     public var onDismissed: (() -> Void)?
 
-    public init(rootViewController: ViewController) {
-        guard let rootViewController = rootViewController as? UIViewController else {
-            super.init(rootViewController: UIViewController())
-            return
-        }
-        super.init(rootViewController: rootViewController)
+    public init() {
+        super.init(nibName: nil, bundle: nil)
     }
 
     @available(*, unavailable)

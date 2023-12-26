@@ -45,7 +45,6 @@ public protocol ViewController: AnyObject, Dismissable {
     func showDetailViewController(_ vc: ViewController, sender: Any?)
     func present(_ viewControllerToPresent: ViewController, animated flag: Bool, completion: (() -> Void)?)
     func dismiss(animated flag: Bool)
-    func dismiss(animated flag: Bool, completion: (() -> Void)?)
 }
 
 public extension ViewController {
@@ -109,6 +108,10 @@ public extension ViewController {
     }
 
     func dismiss(animated flag: Bool) {
-        dismiss(animated: flag, completion: nil)
+        guard
+            let selfAsUIViewController = self as? UIViewController
+        else { return }
+
+        selfAsUIViewController.dismiss(animated: flag, completion: nil)
     }
 }

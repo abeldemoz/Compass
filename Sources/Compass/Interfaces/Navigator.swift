@@ -8,6 +8,10 @@
 import Foundation
 
 public protocol Navigator: AnyObject {
-    func present(_ viewController: inout ViewController, transition: Transition, onDismissed: (() -> Void)?)
+    func navigate(to viewController: inout ViewController, transition: Transition, onDismissed: (() -> Void)?)
+    func exitFlow(coordinator: Coordinator, animated: Bool)
     func dismiss(animated: Bool)
+    func popViewController(animated: Bool)
+    func popToViewController(_ viewController: ViewController, animated: Bool)
+    func popToRootViewController(animated: Bool)
 }
