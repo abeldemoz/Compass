@@ -7,7 +7,7 @@
 
 import UIKit
 
-public final class BasicNavigationController: UINavigationController {
+open class BasicNavigationController: UINavigationController, NavigationController {
 
     public var onDismissed: (() -> Void)?
 
@@ -15,8 +15,16 @@ public final class BasicNavigationController: UINavigationController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    public init(rootViewController: ViewController) {
+        guard let viewController = rootViewController as? UIViewController else {
+            super.init(nibName: nil, bundle: nil)
+            return
+        }
+        super.init(rootViewController: viewController)
+    }
+
     @available(*, unavailable)
-    required init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

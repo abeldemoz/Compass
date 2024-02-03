@@ -2,89 +2,108 @@
 // BasicNavigator.swift
 //
 //
-// Created by Abel Demoz on 15/12/2023.
+// Created by Abel Demoz on 27/12/2023.
 //
 
 import UIKit
 
 public final class BasicNavigator {
 
-    let makeNavigationController: () -> NavigationController
-    private(set) var navigationControllers: [NavigationController] = []
+    private let navigationController: NavigationController
 
-    private var activeNavigationController: NavigationController? { navigationControllers.last }
+    private var activeViewController: ViewController {
+        var avc: ViewController = navigationController
 
-    public init(
-        navigationController: NavigationController,
-        makeNavigationController: @escaping () -> NavigationController
-    ) {
-        self.makeNavigationController = makeNavigationController
-        navigationControllers = [navigationController]
+        while let presentedViewController = avc.presentedViewController {
+            avc = presentedViewController
+        }
+
+        return avc
+    }
+
+    public init(navigationController: NavigationController) {
+        self.navigationController = navigationController
     }
 }
 
 extension BasicNavigator: Navigator {
 
-    public func navigate(to viewController: inout ViewController, transition: Transition, onDismissed: (() -> Void)?) {
+    public func navigate(to viewController: ViewController, transition: Transition) {
 
         switch transition {
-        case let .push(animated):
-            viewController.onDismissed = onDismissed
-            activeNavigationController?.pushViewController(viewController, animated: animated)
-        case let .modal(animated, presentationStyle, transitionStyle, isModalInPresentation):
-            var navigationController = makeNavigationController()
-            navigationController.viewControllersStack = [viewController]
-            navigationController.modalPresentationStyle = presentationStyle
-            navigationController.modalTransitionStyle = transitionStyle
-            navigationController.isModalInPresentation = isModalInPresentation
-            navigationController.onDismissed = { [weak self] in
-                onDismissed?()
-                _ = self?.navigationControllers.removeAll(where: { bnc in
-                    bnc === navigationController
-                })
-            }
-            activeNavigationController?.present(navigationController, animated: animated)
-            navigationControllers.append(navigationController)
+        case let .push(animated: animated):
+            push(viewController, animated: animated)
+        case let .modal(animated: animated):
+            present(viewController, animated: animated)
         }
     }
 
     public func exitFlow(coordinator: Coordinator, animated: Bool) {
+
         guard
-            let activeNavigationController,
-            let rootViewController = coordinator.rootViewController,
-            let index = activeNavigationController.viewControllersStack.firstIndex(where: { viewController in
-                rootViewController === viewController
-            })
+            let baseViewController = coordinator.baseViewController
         else { return }
 
-        guard index > 0 else {
-            dismiss(animated: animated)
+        if baseViewController.presentedViewController != nil {
+            baseViewController.dismiss(animated: animated)
+        }
+
+        if baseViewController is NavigationController, baseViewController.presentingViewController != nil {
+            baseViewController.presentingViewController?.dismiss(animated: animated)
             return
         }
 
-        let viewControllerPrecedingFlow = activeNavigationController.viewControllersStack[index - 1]
+        if let navigationController = baseViewController.navigationController, let index = navigationController.viewControllersStack.firstIndex(where: { viewController in
+            baseViewController === viewController
+        }) {
+            if index > 0 {
+                let viewControllerPrecedingFlow = navigationController.viewControllersStack[index - 1]
 
-        popToViewController(viewControllerPrecedingFlow, animated: animated)
+                popToViewController(viewControllerPrecedingFlow, animated: animated)
+            } else {
+                navigationController.presentingViewController?.dismiss(animated: animated)
+            }
+        }
+    }
 
+    private func present(_ viewController: ViewController, animated: Bool) {
+        activeViewController.present(viewController, animated: animated)
+    }
+
+    private func push(_ viewController: ViewController, animated: Bool) {
+
+        guard let activeNavigationController = activeViewController as? NavigationController else {
+            return
+        }
+
+        activeNavigationController.pushViewController(viewController, animated: animated)
     }
 
     public func dismiss(animated: Bool) {
-        guard let presentingViewController = activeNavigationController?.presentingViewController else {
-            return
-        }
-        presentingViewController.dismiss(animated: animated)
-        _ = navigationControllers.popLast()
+        activeViewController.dismiss(animated: animated)
     }
 
     public func popViewController(animated: Bool) {
-        activeNavigationController?.popTopViewController(animated: animated)
+        guard let activeNavigationController = activeViewController as? NavigationController else {
+            return
+        }
+
+        activeNavigationController.popTopViewController(animated: animated)
     }
 
     public func popToViewController(_ viewController: ViewController, animated: Bool) {
-        activeNavigationController?.popToViewController(viewController, animated: animated)
+        guard let activeNavigationController = activeViewController as? NavigationController else {
+            return
+        }
+
+        activeNavigationController.popToViewController(viewController, animated: animated)
     }
 
     public func popToRootViewController(animated: Bool) {
-        activeNavigationController?.popToTheRootViewController(animated: animated)
+        guard let activeNavigationController = activeViewController as? NavigationController else {
+            return
+        }
+
+        activeNavigationController.popToTheRootViewController(animated: animated)
     }
 }

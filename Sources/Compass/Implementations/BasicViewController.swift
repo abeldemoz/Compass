@@ -7,7 +7,7 @@
 
 import UIKit
 
-public final class BasicViewController: UIViewController, ViewController {
+open class BasicViewController: UIViewController, ViewController {
 
     public var onDismissed: (() -> Void)? = nil
 
@@ -16,7 +16,7 @@ public final class BasicViewController: UIViewController, ViewController {
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

@@ -23,6 +23,9 @@ public protocol ViewController: AnyObject, Dismissable {
     var overrideUserInterfaceStyle: UIUserInterfaceStyle { get set }
     var presentingViewController: ViewController? { get }
     var presentedViewController: ViewController? { get }
+    var presentationController: UIPresentationController? { get }
+    var sheetPresentationController: UISheetPresentationController? { get }
+    var activePresentationController: UIPresentationController? { get }
     var navigationController: NavigationController? { get }
     var tabBarController: UITabBarController? { get }
     var hidesBottomBarWhenPushed: Bool { get set }

@@ -10,24 +10,10 @@ import XCTest
 
 final class BasicNavigationControllerTests: XCTestCase {
 
-    private var navigationController: BasicNavigationController!
-
-    override func setUp() {
-        super.setUp()
-
-        navigationController = BasicNavigationController()
-        navigationController.viewControllers = [BasicViewController()]
-    }
-
-    override func tearDown() {
-        navigationController = nil
-        super.tearDown()
-    }
-
     func test_deinit() {
+        var navigationController: BasicNavigationController? = BasicNavigationController()
         let expectation = expectation(description: "BasicNavigationControllerTests_test_deinit")
-        let fulfillExpectation = expectation.fulfill
-        navigationController?.onDismissed = fulfillExpectation
+        navigationController?.onDismissed = expectation.fulfill
         navigationController = nil
         wait(for: [expectation], timeout: 1)
     }

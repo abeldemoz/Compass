@@ -9,12 +9,12 @@ public protocol Coordinator: AnyObject {
 
     var childCoordinators: [Coordinator] { get set }
     var navigator: Navigator { get }
-    var rootViewController: ViewController? { get set }
+    var baseViewController: ViewController? { get set }
     var parentCoordinator: Coordinator? { get set }
 
-    func dismiss(animated: Bool)
+    func finish(animated: Bool)
     func start(transition: Transition, onDismissed: (() -> Void)?)
-    func presentChild(
+    func startChild(
         _ child: Coordinator,
         transition: Transition,
         onDismissed: (() -> Void)?
@@ -23,23 +23,23 @@ public protocol Coordinator: AnyObject {
 
 public extension Coordinator {
 
-    func dismiss(animated: Bool) {
-        navigator.dismiss(animated: animated)
+    func finish(animated: Bool) {
+        navigator.exitFlow(coordinator: self, animated: animated)
     }
 
-    func presentChild(
+    func startChild(
         _ child: Coordinator,
         transition: Transition,
         onDismissed: (() -> Void)?
     ) {
         childCoordinators.append(child)
+        child.parentCoordinator = self
         child.start(transition: transition, onDismissed: { [weak self, weak child] in
             guard let self, let child else { return }
 
             self.removeChild(child)
             onDismissed?()
         })
-        child.parentCoordinator = self
     }
 
     private func removeChild(_ child: Coordinator) {

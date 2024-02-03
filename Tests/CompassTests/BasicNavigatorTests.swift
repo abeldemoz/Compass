@@ -5,6 +5,7 @@
 // Created by Abel Demoz on 21/12/2023.
 //
 
+import TestDoubles
 import XCTest
 @testable import Compass
 
@@ -16,79 +17,47 @@ final class BasicNavigatorTests: XCTestCase {
         super.setUp()
 
         navigationController = .init()
-        sut = .init(
-            navigationController: navigationController,
-            makeNavigationController: createNavigationController
-        )
-    }
-
-    func test_init() {
-        sut = .init(navigationController: navigationController, makeNavigationController: createNavigationController)
-
-        XCTAssert(sut.navigationControllers.count == 1)
-        XCTAssert(sut.navigationControllers.first === navigationController)
+        sut = .init(navigationController: navigationController)
     }
 
     func test_navigate_pushTransition() {
-        var viewController: ViewController = BasicViewController()
-        let expectation = XCTestExpectation(description: "test_navigate_pushesViewController")
+        let viewController: ViewController = BasicViewController()
 
-        sut.navigate(to: &viewController, transition: .push(animated: true), onDismissed: expectation.fulfill)
-        viewController.onDismissed?()
-        viewController.onDismissed = nil
+        sut.navigate(to: viewController, transition: .push(animated: true))
 
         XCTAssertEqual(navigationController.log, [.pushViewController(animated: true)])
-        wait(for: [expectation], timeout: 1)
     }
 
     func test_navigate_modalTransition() {
-        var viewController: ViewController = BasicViewController()
-        let navController = NavigationControllerSpy()
-        let navControllerClosure = { navController as NavigationController }
-        let transition = Transition.modal(
-            animated: true,
-            presentationStyle: .formSheet,
-            transitionStyle: .flipHorizontal,
-            isModalInPresentation: true
-        )
-        let expectation = XCTestExpectation(description: "")
-        sut = .init(navigationController: navigationController, makeNavigationController: navControllerClosure)
+        let viewController: ViewController = BasicViewController()
+        let transition = Transition.modal(animated: true)
+        sut = .init(navigationController: navigationController)
 
-        sut.navigate(to: &viewController, transition: transition, onDismissed: expectation.fulfill)
+        sut.navigate(to: viewController, transition: transition)
 
-        XCTAssertEqual(navController.viewControllersStack.count, 1)
-        XCTAssert(navController.viewControllersStack.first === viewController)
-        XCTAssertEqual(navController.modalPresentationStyle, .formSheet)
-        XCTAssertEqual(navController.modalTransitionStyle, .flipHorizontal)
-        XCTAssertEqual(navController.isModalInPresentation, true)
         XCTAssertEqual(navigationController.log, [.present(animated: true)])
-        XCTAssertEqual(sut.navigationControllers.count, 2)
-        XCTAssert(sut.navigationControllers.last === navController)
-
-        navController.onDismissed?()
-        XCTAssert(sut.navigationControllers.count == 1)
-        wait(for: [expectation], timeout: 1)
     }
 
-    func test_dismiss() {
-        var viewController: ViewController = BasicViewController()
-        let navController = NavigationControllerSpy()
-        let navControllerClosure = { navController as NavigationController }
-        let transition = Transition.modal(
-            animated: true,
-            presentationStyle: .formSheet,
-            transitionStyle: .flipHorizontal,
-            isModalInPresentation: true
-        )
-        navController._presentingViewController = navigationController
-        sut = .init(navigationController: navigationController, makeNavigationController: navControllerClosure)
+    // TODO: finish writing exitFlow method test(s)
+//    func test_exitFlow() {
+//        let baseViewController = NavigationControllerSpy()
+//        let coordinator = CoordinatorSpy()
+//        coordinator.baseViewController = baseViewController
+//
+//        sut.exitFlow(coordinator: coordinator, animated: true)
+//        XCTAssertEqual(baseViewController.log, [.dismiss(animated: true)])
+//    }
 
-        sut.navigate(to: &viewController, transition: transition, onDismissed: nil)
-        XCTAssertEqual(sut.navigationControllers.count, 2)
+    func test_dismiss() {
+        let viewController: ViewController = BasicViewController()
+
+        let transition = Transition.modal(animated: true)
+        sut = .init(navigationController: navigationController)
+
+        sut.navigate(to: viewController, transition: transition)
         navigationController.log = []
         sut.dismiss(animated: true)
         XCTAssertEqual(navigationController.log, [.dismiss(animated: true)])
-        XCTAssertEqual(sut.navigationControllers.count, 1)
     }
 
     func test_popViewController() {
@@ -104,9 +73,5 @@ final class BasicNavigatorTests: XCTestCase {
     func test_popToRootViewController() {
         sut.popToRootViewController(animated: true)
         XCTAssertEqual(navigationController.log, [.popToTheRootViewController(animated: true)])
-    }
-
-    private func createNavigationController() -> NavigationController {
-        NavigationControllerSpy()
     }
 }
