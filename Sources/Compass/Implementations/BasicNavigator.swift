@@ -61,7 +61,7 @@ extension BasicNavigator: Navigator {
 
                 popToViewController(viewControllerPrecedingFlow, animated: animated)
             } else {
-                navigationController.presentingViewController?.dismiss(animated: animated)
+                navigationController.setViewControllers([], animated: animated)
             }
         }
     }
