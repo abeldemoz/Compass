@@ -7,9 +7,9 @@
 
 import Compass
 
-final class NavigatorSpy: Navigator {
+public final class NavigatorSpy: Navigator {
 
-    enum MethodCall: Equatable {
+    public enum MethodCall: Equatable {
         case navigate(viewController: ViewController, transition: Transition)
         case exitFlow(coordinator: Coordinator, animated: Bool)
         case dismiss(animated: Bool)
@@ -17,7 +17,7 @@ final class NavigatorSpy: Navigator {
         case popToViewController(_ viewController: ViewController, animated: Bool)
         case popToRootViewController(animated: Bool)
 
-        static func == (lhs: NavigatorSpy.MethodCall, rhs: NavigatorSpy.MethodCall) -> Bool {
+        public static func == (lhs: NavigatorSpy.MethodCall, rhs: NavigatorSpy.MethodCall) -> Bool {
             switch (lhs, rhs) {
             case let (.navigate(viewController1, transition1), .navigate(viewController2, transition2)):
                 return viewController1 === viewController2 && transition1 == transition2
@@ -37,29 +37,31 @@ final class NavigatorSpy: Navigator {
         }
     }
 
-    var log: [MethodCall] = []
+    public var log: [MethodCall] = []
 
-    func navigate(to viewController: ViewController, transition: Transition) {
+    public init() {}
+
+    public func navigate(to viewController: ViewController, transition: Transition) {
         log.append(.navigate(viewController: viewController, transition: transition))
     }
 
-    func exitFlow(coordinator: Coordinator, animated: Bool) {
+    public func exitFlow(coordinator: Coordinator, animated: Bool) {
         log.append(.exitFlow(coordinator: coordinator, animated: animated))
     }
 
-    func dismiss(animated: Bool) {
+    public func dismiss(animated: Bool) {
         log.append(.dismiss(animated: animated))
     }
 
-    func popViewController(animated: Bool) {
+    public func popViewController(animated: Bool) {
         log.append(.popViewController(animated: animated))
     }
 
-    func popToViewController(_ viewController: ViewController, animated: Bool) {
+    public func popToViewController(_ viewController: ViewController, animated: Bool) {
         log.append(.popToViewController(viewController, animated: animated))
     }
 
-    func popToRootViewController(animated: Bool) {
+    public func popToRootViewController(animated: Bool) {
         log.append(.popToRootViewController(animated: animated))
     }
 

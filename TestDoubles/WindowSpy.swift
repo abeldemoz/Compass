@@ -7,17 +7,19 @@
 
 import Compass
 
-final class WindowSpy: Window {
+public final class WindowSpy: Window {
 
-    enum MethodCall: Equatable {
+    public enum MethodCall: Equatable {
         case makeKeyAndVisible
     }
 
-    var log: [MethodCall] = []
+    public var log: [MethodCall] = []
 
-    var rootViewController: ViewController?
+    public var rootViewController: ViewController?
 
-    func makeKeyAndVisible() {
+    public init() {}
+
+    public func makeKeyAndVisible() {
         log.append(.makeKeyAndVisible)
     }
 }

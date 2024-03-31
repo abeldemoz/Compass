@@ -11,6 +11,10 @@ let package = Package(
         .library(
             name: "Compass",
             targets: ["Compass"]
+        ),
+        .library(
+            name: "CompassTestDoubles",
+            targets: ["CompassTestDoubles"]
         )
     ],
     targets: [
@@ -19,13 +23,13 @@ let package = Package(
         .target(
             name: "Compass"),
         .target(
-            name: "TestDoubles",
+            name: "CompassTestDoubles",
             dependencies: ["Compass"],
             path: "TestDoubles/"
         ),
         .testTarget(
             name: "CompassTests",
-            dependencies: ["Compass", "TestDoubles"]
+            dependencies: ["Compass", "CompassTestDoubles"]
         )
     ]
 )

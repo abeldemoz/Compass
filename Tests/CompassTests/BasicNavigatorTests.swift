@@ -5,8 +5,8 @@
 // Created by Abel Demoz on 21/12/2023.
 //
 
-import TestDoubles
 import XCTest
+import CompassTestDoubles
 @testable import Compass
 
 final class BasicNavigatorTests: XCTestCase {

@@ -7,22 +7,24 @@
 
 import Compass
 
-final class CoordinatorSpy: Coordinator {
-    enum MethodCall: Equatable {
+public final class CoordinatorSpy: Coordinator {
+    public enum MethodCall: Equatable {
         case start(transition: Transition)
     }
 
-    var log: [MethodCall] = []
+    public var log: [MethodCall] = []
 
-    var childCoordinators: [Coordinator] = []
+    public var childCoordinators: [Coordinator] = []
 
-    var navigator: Navigator = NavigatorSpy()
+    public var navigator: Navigator = NavigatorSpy()
 
-    var baseViewController: ViewController?
+    public var baseViewController: ViewController?
 
-    var parentCoordinator: Coordinator?
+    public var parentCoordinator: Coordinator?
 
-    func start(transition: Transition, onDismissed: (() -> Void)?) {
+    public init() {}
+    
+    public func start(transition: Transition, onDismissed: (() -> Void)?) {
         defer { onDismissed?() }
         log.append(.start(transition: transition))
     }
