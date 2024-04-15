@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class BasicTabBarController: UITabBarController, TabBarController {
+public class BasicTabBarController: UITabBarController {
 
     public var onDismissed: (() -> Void)? = nil
 

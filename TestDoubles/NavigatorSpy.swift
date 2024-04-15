@@ -6,15 +6,16 @@
 //
 
 import Compass
+import UIKit
 
 public final class NavigatorSpy: Navigator {
 
     public enum MethodCall: Equatable {
-        case navigate(viewController: ViewController, transition: Transition)
+        case navigate(viewController: UIViewController, transition: Transition)
         case exitFlow(coordinator: Coordinator, animated: Bool)
         case dismiss(animated: Bool)
         case popViewController(animated: Bool)
-        case popToViewController(_ viewController: ViewController, animated: Bool)
+        case popToViewController(_ viewController: UIViewController, animated: Bool)
         case popToRootViewController(animated: Bool)
 
         public static func == (lhs: NavigatorSpy.MethodCall, rhs: NavigatorSpy.MethodCall) -> Bool {
@@ -41,7 +42,7 @@ public final class NavigatorSpy: Navigator {
 
     public init() {}
 
-    public func navigate(to viewController: ViewController, transition: Transition) {
+    public func navigate(to viewController: UIViewController, transition: Transition) {
         log.append(.navigate(viewController: viewController, transition: transition))
     }
 
@@ -57,7 +58,7 @@ public final class NavigatorSpy: Navigator {
         log.append(.popViewController(animated: animated))
     }
 
-    public func popToViewController(_ viewController: ViewController, animated: Bool) {
+    public func popToViewController(_ viewController: UIViewController, animated: Bool) {
         log.append(.popToViewController(viewController, animated: animated))
     }
 

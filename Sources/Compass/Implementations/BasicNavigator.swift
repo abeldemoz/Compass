@@ -9,10 +9,10 @@ import UIKit
 
 public final class BasicNavigator {
 
-    private let navigationController: NavigationController
+    private let navigationController: UINavigationController
 
-    private var activeViewController: ViewController {
-        var avc: ViewController = navigationController
+    private var activeViewController: UIViewController {
+        var avc: UIViewController = navigationController
 
         while let presentedViewController = avc.presentedViewController {
             avc = presentedViewController
@@ -21,14 +21,14 @@ public final class BasicNavigator {
         return avc
     }
 
-    public init(navigationController: NavigationController) {
+    public init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
 }
 
 extension BasicNavigator: Navigator {
 
-    public func navigate(to viewController: ViewController, transition: Transition) {
+    public func navigate(to viewController: UIViewController, transition: Transition) {
 
         switch transition {
         case let .push(animated: animated):
@@ -48,16 +48,16 @@ extension BasicNavigator: Navigator {
             baseViewController.dismiss(animated: animated)
         }
 
-        if baseViewController is NavigationController, baseViewController.presentingViewController != nil {
+        if baseViewController is UINavigationController, baseViewController.presentingViewController != nil {
             baseViewController.presentingViewController?.dismiss(animated: animated)
             return
         }
 
-        if let navigationController = baseViewController.navigationController, let index = navigationController.viewControllersStack.firstIndex(where: { viewController in
+        if let navigationController = baseViewController.navigationController, let index = navigationController.viewControllers.firstIndex(where: { viewController in
             baseViewController === viewController
         }) {
             if index > 0 {
-                let viewControllerPrecedingFlow = navigationController.viewControllersStack[index - 1]
+                let viewControllerPrecedingFlow = navigationController.viewControllers[index - 1]
 
                 popToViewController(viewControllerPrecedingFlow, animated: animated)
             } else {
@@ -66,13 +66,13 @@ extension BasicNavigator: Navigator {
         }
     }
 
-    private func present(_ viewController: ViewController, animated: Bool) {
+    private func present(_ viewController: UIViewController, animated: Bool) {
         activeViewController.present(viewController, animated: animated)
     }
 
-    private func push(_ viewController: ViewController, animated: Bool) {
+    private func push(_ viewController: UIViewController, animated: Bool) {
 
-        guard let activeNavigationController = activeViewController as? NavigationController else {
+        guard let activeNavigationController = activeViewController as? UINavigationController else {
             return
         }
 
@@ -84,15 +84,15 @@ extension BasicNavigator: Navigator {
     }
 
     public func popViewController(animated: Bool) {
-        guard let activeNavigationController = activeViewController as? NavigationController else {
+        guard let activeNavigationController = activeViewController as? UINavigationController else {
             return
         }
 
-        activeNavigationController.popTopViewController(animated: animated)
+        activeNavigationController.popViewController(animated: animated)
     }
 
-    public func popToViewController(_ viewController: ViewController, animated: Bool) {
-        guard let activeNavigationController = activeViewController as? NavigationController else {
+    public func popToViewController(_ viewController: UIViewController, animated: Bool) {
+        guard let activeNavigationController = activeViewController as? UINavigationController else {
             return
         }
 
@@ -100,10 +100,10 @@ extension BasicNavigator: Navigator {
     }
 
     public func popToRootViewController(animated: Bool) {
-        guard let activeNavigationController = activeViewController as? NavigationController else {
+        guard let activeNavigationController = activeViewController as? UINavigationController else {
             return
         }
 
-        activeNavigationController.popToTheRootViewController(animated: animated)
+        activeNavigationController.popToRootViewController(animated: animated)
     }
 }

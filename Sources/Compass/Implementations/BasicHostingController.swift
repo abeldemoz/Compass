@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public final class BasicHostingController<V>: UIHostingController<V>, ViewController where V: View {
+public final class BasicHostingController<V>: UIHostingController<V> where V: View {
 
     public var onDismissed: (() -> Void)?
 

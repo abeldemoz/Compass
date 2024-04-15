@@ -6,6 +6,7 @@
 //
 
 import Compass
+import UIKit
 
 public final class CoordinatorSpy: Coordinator {
     public enum MethodCall: Equatable {
@@ -18,7 +19,7 @@ public final class CoordinatorSpy: Coordinator {
 
     public var navigator: Navigator = NavigatorSpy()
 
-    public var baseViewController: ViewController?
+    public var baseViewController: UIViewController?
 
     public var parentCoordinator: Coordinator?
 

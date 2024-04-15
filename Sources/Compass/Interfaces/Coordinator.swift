@@ -5,11 +5,13 @@
 // Created by Abel Demoz on 15/12/2023.
 //
 
+import UIKit
+
 public protocol Coordinator: AnyObject {
 
     var childCoordinators: [Coordinator] { get set }
     var navigator: Navigator { get }
-    var baseViewController: ViewController? { get set }
+    var baseViewController: UIViewController? { get set }
     var parentCoordinator: Coordinator? { get set }
 
     func finish(animated: Bool)

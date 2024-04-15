@@ -26,10 +26,6 @@ let package = Package(
             name: "CompassTestDoubles",
             dependencies: ["Compass"],
             path: "TestDoubles/"
-        ),
-        .testTarget(
-            name: "CompassTests",
-            dependencies: ["Compass", "CompassTestDoubles"]
         )
     ]
 )
