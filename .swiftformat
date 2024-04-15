@@ -44,7 +44,6 @@
 --yodaswap always
 --disable andOperator,blankLinesAtEndOfScope,blankLinesAtStartOfScope
 --enable isEmpty
---header \n{file}\n\n\nCreated by Abel Demoz on {created}.\n
 
 # File Options
 --exclude Pods,.build

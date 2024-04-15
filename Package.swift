@@ -13,19 +13,21 @@ let package = Package(
             targets: ["Compass"]
         ),
         .library(
-            name: "CompassTestDoubles",
-            targets: ["CompassTestDoubles"]
+            name: "CompassMocks",
+            targets: ["CompassMocks"]
         )
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "Compass"),
+            name: "Compass",
+            path: "Sources/"
+        ),
         .target(
-            name: "CompassTestDoubles",
+            name: "CompassMocks",
             dependencies: ["Compass"],
-            path: "TestDoubles/"
+            path: "Mocks/"
         )
     ]
 )
