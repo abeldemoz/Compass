@@ -7,10 +7,14 @@ import {{ import }}
 
 {% macro cleanString string %}{{ string | replace:"(","_" | replace:")","" | replace:":","_" | replace:"`","" | replace:" ","_" | replace:"?","_" | replace:"!","_" | replace:",","_" | replace:"->","_" | replace:"@","_" | replace:".","_" | replace:"[","" | replace:"]","" | replace:"<","" | replace:">","" | replace:"&","" | snakeToCamelCase }}{% endmacro %}
 {%- macro swiftifyMethodName method -%}
-    {%- set cleanMethodName %}{% call cleanString method.name %}{% endset %}
+    {%- set cleanMethodName %}{% call cleanString method.selectorName %}{% endset %}
     {%- set cleanMethodReturnTypeName %}{% call cleanString method.actualReturnTypeName.name %}{% endset -%}
     {{ cleanMethodName | lowerFirstLetter }}{{ cleanMethodReturnTypeName | upperFirstLetter }}
 {%- endmacro -%}
+
+{% macro passThroughParameters method %}{% if not method.parameters.count == 0 %}({% for parameter in method.parameters %}{% if parameter.argumentLabel == nil %}{% else %}{{ parameter.argumentLabel }}: {% endif %}{{parameter.name }}{% if not forloop.last %}, {% endif %}{% endfor %}){% endif %}{% endmacro %}
+
+{% macro methodCaseName method %}{{ method.callName }}{% if not method.parameters.count == 0 %}({% for parameter in method.parameters %}{% if parameter.argumentLabel == nil %}_{% else %}{{ parameter.argumentLabel }}{% endif %}: {{ parameter.typeName.unwrappedTypeName }}{% if parameter.typeName.isOptional %}?{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}){% endif %}{% endmacro %}
 
 {% macro accessLevel level %}{% if level != 'internal' %}{{ level }} {% endif %}{% endmacro %}
 
@@ -94,6 +98,7 @@ import {{ import }}
     {% endfor %}
     {% endfor %}
     {% call accessLevel method.accessLevel %}{% call staticSpecifier method %}{% call methodName method %}{{ ' async' if method.isAsync }}{{ ' throws' if method.throws }}{% if not method.returnTypeName.isVoid %} -> {% call existentialVariableTypeName method.returnTypeName false %}{% endif %} {
+        log.append(.{{ method.callName }}{% call passThroughParameters method %})
         {% call swiftifyMethodName method %}CallsCount += 1
         {% call methodReceivedParameters method %}
         {% if method.throws %}
@@ -323,6 +328,14 @@ import {{ import }}
 
 {% for type in types.protocols where type.based.AutoMockable or type|annotated:"AutoMockable" %}{% if type.name != "AutoMockable" %}
 {% call accessLevel type.accessLevel %}class {{ type.name }}Mock: {{ type.name }} {
+
+    public enum MethodCall{% if type|annotated:"HasEquatableMethodParameters" or type|annotated:"RequiresMethodLevelHelpers" %}: Equatable{% endif %} {
+    {% for method in type.allMethods|!definedInExtension %}{% if not method.isInitializer %}
+        case {% call methodCaseName method %}{% endif %}
+    {% endfor %}
+    }
+
+    {% call accessLevel type.accessLevel %}{% call staticSpecifier method %}var log: [MethodCall] = []
 
     {% if type.accessLevel == "public" %}public init() {}{% endif %}
 
