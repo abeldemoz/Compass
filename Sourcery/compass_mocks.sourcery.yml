@@ -1,0 +1,12 @@
+configurations:
+  - sources:
+      - "../Sources/Interfaces/"
+      - "../Mocks/"
+    templates:
+      - "../Sourcery/AutoMockable.stencil"
+    output: "../Mocks/Mocks.generated.swift"
+    args:
+      mocksModule: JourneyTracker
+      imports:
+        - Compass
+        - UIKit
