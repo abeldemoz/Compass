@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class BasicNavigationController: UINavigationController {
+open class BasicNavigationController: UINavigationController, Dismissable {
 
     public var onDismissed: (() -> Void)?
 
@@ -17,10 +17,5 @@ open class BasicNavigationController: UINavigationController {
             onDismissed = nil
         }
         super.viewDidDisappear(animated)
-    }
-
-    deinit {
-        onDismissed?()
-        onDismissed = nil
     }
 }

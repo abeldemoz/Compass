@@ -7,9 +7,9 @@
 
 import UIKit
 
-open class BasicViewController: UIViewController {
+open class BasicViewController: UIViewController, Dismissable {
 
-    public var onDismissed: (() -> Void)? = nil
+    public var onDismissed: (() -> Void)?
 
     public init() {
         super.init(nibName: nil, bundle: nil)
@@ -26,10 +26,5 @@ open class BasicViewController: UIViewController {
             onDismissed = nil
         }
         super.viewDidDisappear(animated)
-    }
-
-    deinit {
-        onDismissed?()
-        onDismissed = nil
     }
 }

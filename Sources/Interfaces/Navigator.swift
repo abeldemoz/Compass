@@ -7,6 +7,7 @@
 
 import UIKit
 
+@MainActor 
 public protocol Navigator: AnyObject {
     func navigate(to viewController: UIViewController, transition: Transition)
     func exitFlow(coordinator: Coordinator, animated: Bool)

@@ -6,5 +6,5 @@
 //
 
 public protocol Dismissable {
-    var onDismissed: (() -> Void)? { get set }
+    @MainActor var onDismissed: (() -> Void)? { get set }
 }

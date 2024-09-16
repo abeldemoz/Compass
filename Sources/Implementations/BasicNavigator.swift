@@ -7,19 +7,9 @@
 
 import UIKit
 
-public final class BasicNavigator {
+public final class BasicNavigator: NSObject {
 
     private let navigationController: UINavigationController
-
-    private var activeViewController: UIViewController {
-        var avc: UIViewController = navigationController
-
-        while let presentedViewController = avc.presentedViewController {
-            avc = presentedViewController
-        }
-
-        return avc
-    }
 
     public init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -66,19 +56,6 @@ extension BasicNavigator: Navigator {
         }
     }
 
-    private func present(_ viewController: UIViewController, animated: Bool) {
-        activeViewController.present(viewController, animated: animated)
-    }
-
-    private func push(_ viewController: UIViewController, animated: Bool) {
-
-        guard let activeNavigationController = activeViewController as? UINavigationController else {
-            return
-        }
-
-        activeNavigationController.pushViewController(viewController, animated: animated)
-    }
-
     public func dismiss(animated: Bool) {
         activeViewController.dismiss(animated: animated)
     }
@@ -106,4 +83,50 @@ extension BasicNavigator: Navigator {
 
         activeNavigationController.popToRootViewController(animated: animated)
     }
+}
+
+@MainActor
+private extension BasicNavigator {
+    private var activeViewController: UIViewController {
+        var avc: UIViewController = navigationController
+
+        while let presentedViewController = avc.presentedViewController {
+            avc = presentedViewController
+        }
+
+        return avc
+    }
+
+    private func present(_ viewController: UIViewController, animated: Bool) {
+        activeViewController.present(viewController, animated: animated)
+    }
+
+    private func push(_ viewController: UIViewController, animated: Bool) {
+
+        guard let activeNavigationController = activeViewController as? UINavigationController else {
+            return
+        }
+
+        activeNavigationController.pushViewController(viewController, animated: animated)
+    }
+}
+
+extension BasicNavigator: UINavigationControllerDelegate {
+    public func navigationController(
+        _ navigationController: UINavigationController,
+        didShow viewController: UIViewController,
+        animated: Bool) {
+            guard let dismissedViewController =
+                    navigationController.transitionCoordinator?
+                .viewController(forKey: .from),
+                  !navigationController.viewControllers
+                .contains(dismissedViewController) else {
+                return
+            }
+
+            if var dismissableViewController = dismissedViewController as? Dismissable {
+                dismissableViewController.onDismissed?()
+                dismissableViewController.onDismissed = nil
+            }
+        }
 }

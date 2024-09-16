@@ -7,6 +7,7 @@
 
 import UIKit
 
+@MainActor 
 public protocol Coordinator: AnyObject {
 
     var childCoordinators: [Coordinator] { get set }
@@ -36,7 +37,7 @@ public extension Coordinator {
     ) {
         childCoordinators.append(child)
         child.parentCoordinator = self
-        child.start(transition: transition, onDismissed: { [weak self, weak child] in
+        child.start(transition: transition, onDismissed: { @MainActor [weak self, weak child] in
             guard let self, let child else { return }
 
             self.removeChild(child)
