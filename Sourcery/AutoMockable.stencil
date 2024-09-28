@@ -329,7 +329,7 @@ import {{ import }}
 {% for type in types.protocols where type.based.AutoMockable or type|annotated:"AutoMockable" %}{% if type.name != "AutoMockable" %}
 {% call accessLevel type.accessLevel %}class {{ type.name }}Mock: {{ type.name }}, @unchecked Sendable {
 
-    public enum MethodCall{% if type|annotated:"HasEquatableMethodParameters" or type|annotated:"RequiresMethodLevelHelpers" %}: Equatable{% endif %} {
+    public enum MethodCall: {% if type|annotated:"HasEquatableMethodParameters" or type|annotated:"RequiresMethodLevelHelpers" %}Equatable, {% endif %}@unchecked Sendable {
     {% for method in type.allMethods|!definedInExtension %}{% if not method.isInitializer %}
         case {% call methodCaseName method %}{% endif %}
     {% endfor %}

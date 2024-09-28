@@ -32,7 +32,7 @@ import UIKit
 
 public class CoordinatorMock: Coordinator, @unchecked Sendable {
 
-    public enum MethodCall {
+    public enum MethodCall: @unchecked Sendable {
         case finish(animated: Bool)
         case start(transition: Transition, onDismissed: (() -> Void)?)
         case startChild(_: Coordinator, transition: Transition, onDismissed: (() -> Void)?)
@@ -102,7 +102,7 @@ public class CoordinatorMock: Coordinator, @unchecked Sendable {
 }
 public class DismissableMock: Dismissable, @unchecked Sendable {
 
-    public enum MethodCall {
+    public enum MethodCall: @unchecked Sendable {
     }
 
     public var log: [MethodCall] = []
@@ -116,7 +116,7 @@ public class DismissableMock: Dismissable, @unchecked Sendable {
 }
 public class NavigatorMock: Navigator, @unchecked Sendable {
 
-    public enum MethodCall {
+    public enum MethodCall: @unchecked Sendable {
         case navigate(to: UIViewController, transition: Transition)
         case exitFlow(coordinator: Coordinator, animated: Bool)
         case dismiss(animated: Bool)
