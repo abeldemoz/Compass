@@ -30,7 +30,7 @@ import UIKit
 
 
 
-public class CoordinatorMock: Coordinator {
+public class CoordinatorMock: Coordinator, @unchecked Sendable {
 
     public enum MethodCall {
         case finish(animated: Bool)
@@ -100,7 +100,7 @@ public class CoordinatorMock: Coordinator {
 
 
 }
-public class DismissableMock: Dismissable {
+public class DismissableMock: Dismissable, @unchecked Sendable {
 
     public enum MethodCall {
     }
@@ -114,7 +114,7 @@ public class DismissableMock: Dismissable {
 
 
 }
-public class NavigatorMock: Navigator {
+public class NavigatorMock: Navigator, @unchecked Sendable {
 
     public enum MethodCall {
         case navigate(to: UIViewController, transition: Transition)
