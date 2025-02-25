@@ -21,17 +21,17 @@ open class BasicViewController: UIViewController, Dismissable {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override func loadView() {
+    override open func loadView() {
         super.loadView()
         viewLifeCycleDelegate?.loadView()
     }
 
-    public override func viewDidAppear(_ animated: Bool) {
+    override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         viewLifeCycleDelegate?.viewDidAppear()
     }
 
-    override public func viewDidDisappear(_ animated: Bool) {
+    override open func viewDidDisappear(_ animated: Bool) {
         if isBeingDismissed {
             onDismissed?()
             onDismissed = nil
@@ -40,37 +40,37 @@ open class BasicViewController: UIViewController, Dismissable {
         viewLifeCycleDelegate?.viewDidDisappear()
     }
 
-    public override func viewDidLayoutSubviews() {
+    override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         viewLifeCycleDelegate?.viewDidLayoutSubviews()
     }
 
-    public override func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         viewLifeCycleDelegate?.viewDidLoad()
     }
 
-    public override func viewIsAppearing(_ animated: Bool) {
+    override open func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         viewLifeCycleDelegate?.viewIsAppearing()
     }
 
-    public override func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewLifeCycleDelegate?.viewWillAppear()
     }
 
-    public override func viewWillDisappear(_ animated: Bool) {
+    override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         viewLifeCycleDelegate?.viewWillDisappear()
     }
 
-    public override func viewWillLayoutSubviews() {
+    override open func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         viewLifeCycleDelegate?.viewWillLayoutSubviews()
     }
 
-    public override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
+    override open func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         viewLifeCycleDelegate?.viewWillTransition(to: size, with: coordinator)
     }
